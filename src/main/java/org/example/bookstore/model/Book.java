@@ -10,36 +10,21 @@ import java.math.BigDecimal;
 import lombok.Data;
 
 @Entity
-@Table(name = "books")
 @Data
+@Table(name = "books")
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
     private Long id;
     @Column(nullable = false)
     private String title;
     @Column(nullable = false)
     private String author;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String isbn;
     @Column(nullable = false)
     private BigDecimal price;
     @Column(nullable = false)
     private String description;
-    @Column(nullable = false)
     private String coverImage;
-
-    public Book(String title, String author, String isbn, BigDecimal price,
-                String description, String coverImage) {
-        this.title = title;
-        this.author = author;
-        this.isbn = isbn;
-        this.price = price;
-        this.description = description;
-        this.coverImage = coverImage;
-    }
-
-    public Book() {
-    }
 }
