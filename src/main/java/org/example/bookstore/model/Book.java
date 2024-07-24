@@ -9,10 +9,14 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.SQLRestriction;
 
-@Entity
 @Getter
 @Setter
+@Entity
+@SQLDelete(sql = "UPDATE books SET is_deleted = true WHERE id=?")
+@SQLRestriction(value = "is_deleted=false")
 @Table(name = "books")
 public class Book {
     @Id
@@ -28,5 +32,8 @@ public class Book {
     private BigDecimal price;
     @Column(nullable = false)
     private String description;
+    @Column(name = "cover_image")
     private String coverImage;
+    @Column(nullable = false, name = "is_deleted", columnDefinition = "tinyint")
+    private boolean isDeleted = false;
 }
