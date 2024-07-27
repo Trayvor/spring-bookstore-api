@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class TitleSpecificationProvider implements SpecificationProvider<Book> {
+    public static final String SQL_WILDCARD = "%";
+
     @Override
     public String getKey() {
         return "title";
@@ -14,7 +16,7 @@ public class TitleSpecificationProvider implements SpecificationProvider<Book> {
 
     @Override
     public Specification<Book> getSpecification(String param) {
-        String pattern = "%" + param + "%";
+        String pattern = SQL_WILDCARD + param + SQL_WILDCARD;
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.like(criteriaBuilder.lower(root.get("title")),
                         pattern.toLowerCase());
