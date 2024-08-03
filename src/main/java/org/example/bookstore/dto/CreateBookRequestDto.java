@@ -1,7 +1,7 @@
 package org.example.bookstore.dto;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 import lombok.Data;
 import org.hibernate.validator.constraints.ISBN;
@@ -15,7 +15,7 @@ public class CreateBookRequestDto {
     @ISBN(type = ISBN.Type.ANY)
     private String isbn;
     @NotNull
-    @Min(0)
+    @Positive
     private BigDecimal price;
     @NotNull
     private String description;
