@@ -2,6 +2,7 @@ package org.example.bookstore.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.bookstore.dto.BookDto;
@@ -10,7 +11,6 @@ import org.example.bookstore.dto.CreateBookRequestDto;
 import org.example.bookstore.dto.UpdateBookRequestDto;
 import org.example.bookstore.service.BookService;
 import org.springframework.data.domain.Pageable;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,14 +44,15 @@ public class BookController {
     @PostMapping
     @Operation(summary = "Create book", description = "Book creation, you need to put book in "
             + "JSON format in request body")
-    public BookDto createBook(@RequestBody @Validated CreateBookRequestDto requestDto) {
+    public BookDto createBook(@RequestBody @Valid CreateBookRequestDto requestDto) {
         return bookService.save(requestDto);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update book", description = "Updating book by id, you should put id as "
             + "path variable and book in request body")
-    public BookDto updateBook(@PathVariable Long id, @RequestBody UpdateBookRequestDto requestDto) {
+    public BookDto updateBook(@PathVariable Long id,
+                              @RequestBody @Valid UpdateBookRequestDto requestDto) {
         return bookService.updateById(id, requestDto);
     }
 
