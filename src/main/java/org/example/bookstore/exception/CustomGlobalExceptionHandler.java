@@ -12,6 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -32,7 +33,7 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         body.put(TIMESTAMP_BODY, LocalDateTime.now());
         body.put(STATUS_BODY, HttpStatus.BAD_REQUEST);
         List<String> errorList = ex.getBindingResult().getAllErrors().stream()
-                .map(error -> getErrorMessage(error))
+                .map(this::getErrorMessage)
                 .toList();
         body.put(ERRORS_BODY, errorList);
         return new ResponseEntity<>(body, headers, status);
@@ -45,5 +46,16 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
             return field + " " + message;
         }
         return objectError.getDefaultMessage();
+    }
+
+    @ExceptionHandler(RegistrationException.class)
+    public ResponseEntity<Object> handleRegistrationException(RegistrationException ex,
+                                                              WebRequest request) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put(TIMESTAMP_BODY, LocalDateTime.now());
+        body.put(STATUS_BODY, HttpStatus.BAD_REQUEST);
+        body.put(ERRORS_BODY, ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 }
