@@ -2,12 +2,11 @@ package org.example.bookstore.annotation.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.apache.commons.beanutils.BeanUtils;
 import org.example.bookstore.annotation.FieldMatch;
 import org.example.bookstore.exception.NoValidationFieldsException;
+import org.springframework.beans.BeanWrapperImpl;
 
 public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Object> {
-
     private String firstFieldName;
     private String secondFieldName;
     private String message;
@@ -23,8 +22,10 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
     public boolean isValid(final Object value, final ConstraintValidatorContext context) {
         boolean valid = true;
         try {
-            final Object firstObj = BeanUtils.getProperty(value, firstFieldName);
-            final Object secondObj = BeanUtils.getProperty(value, secondFieldName);
+            final Object firstObj = new BeanWrapperImpl(value)
+                    .getPropertyValue(this.firstFieldName);
+            final Object secondObj = new BeanWrapperImpl(value)
+                    .getPropertyValue(this.secondFieldName);
             valid = firstObj == null && secondObj == null || firstObj != null
                     && firstObj.equals(secondObj);
         } catch (final Exception exception) {

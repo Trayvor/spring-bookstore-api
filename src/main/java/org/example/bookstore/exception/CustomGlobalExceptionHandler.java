@@ -53,9 +53,9 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
                                                               WebRequest request) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put(TIMESTAMP_BODY, LocalDateTime.now());
-        body.put(STATUS_BODY, HttpStatus.BAD_REQUEST);
+        body.put(STATUS_BODY, HttpStatus.CONFLICT);
         body.put(ERRORS_BODY, ex.getMessage());
 
-        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
     }
 }
