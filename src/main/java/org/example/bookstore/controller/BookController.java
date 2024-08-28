@@ -11,6 +11,7 @@ import org.example.bookstore.dto.CreateBookRequestDto;
 import org.example.bookstore.dto.UpdateBookRequestDto;
 import org.example.bookstore.service.BookService;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Find all books", description = "Find all products wit sorting or "
             + "pagination")
     public List<BookDto> findAll(Pageable pageable) {
@@ -35,6 +37,7 @@ public class BookController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Find book by id", description = "Find book by its id, you need to put "
             + "id as path variable")
     public BookDto getBookByID(@PathVariable Long id) {
@@ -42,6 +45,7 @@ public class BookController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Create book", description = "Book creation, you need to put book in "
             + "JSON format in request body")
     public BookDto createBook(@RequestBody @Valid CreateBookRequestDto requestDto) {
@@ -49,6 +53,7 @@ public class BookController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Update book", description = "Updating book by id, you should put id as "
             + "path variable and book in request body")
     public BookDto updateBook(@PathVariable Long id,
@@ -57,6 +62,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Delete book by id", description = "Deleting book by id, you should put "
             + "id as path variable")
     public void deleteBookById(@PathVariable Long id) {
@@ -64,6 +70,7 @@ public class BookController {
     }
 
     @GetMapping("/search")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Operation(summary = "Search books by parameters", description = "Searching books by "
             + "parameters title or author")
     public List<BookDto> searchBooks(BookSearchParameters searchParameters) {

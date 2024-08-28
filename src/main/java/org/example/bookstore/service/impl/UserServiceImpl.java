@@ -8,6 +8,7 @@ import org.example.bookstore.mapper.UserMapper;
 import org.example.bookstore.model.User;
 import org.example.bookstore.repository.user.UserRepository;
 import org.example.bookstore.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponseDto register(UserRegistrationRequestDto requestDto)
@@ -24,6 +26,7 @@ public class UserServiceImpl implements UserService {
                     + requestDto.getEmail() + " is already exists");
         }
         User user = userMapper.toModel(requestDto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return userMapper.toDto(user);
     }
