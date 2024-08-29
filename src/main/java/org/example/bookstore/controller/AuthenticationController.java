@@ -1,5 +1,6 @@
 package org.example.bookstore.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,8 @@ public class AuthenticationController {
     private final UserService userService;
 
     @PostMapping("/registration")
+    @Operation(summary = "Register user", description = "User registration. You need to put user "
+            + "as request body.")
     public UserResponseDto register(@RequestBody @Valid UserRegistrationRequestDto request)
             throws RegistrationException {
         return userService.register(request);

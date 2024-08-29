@@ -1,0 +1,54 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-users-into-users-table
+      author: trayvor
+      changes:
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: email
+                  value: "admin@example.com"
+              - column:
+                  name: password
+                  value: "$2a$10$bf4Gcy22KHq71wC8HJllVu.XbZ57gVXT2R8gz0RwJeYrt.fSd4VGO"
+              - column:
+                  name: first_name
+                  value: "Admin"
+              - column:
+                  name: last_name
+                  value: "User"
+              - column:
+                  name: shipping_address
+                  value: "Example address"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                    name: id
+                    value: 2
+              - column:
+                  name: email
+                  value: "user@example.com"
+              - column:
+                  name: password
+                  value: "$2a$10$bf4Gcy22KHq71wC8HJllVu.XbZ57gVXT2R8gz0RwJeYrt.fSd4VGO"
+              - column:
+                  name: first_name
+                  value: "Regular"
+              - column:
+                  name: last_name
+                  value: "User"
+              - column:
+                  name: shipping_address
+                  value: "Example address"
+              - column:
+                  name: is_deleted
+                  valueBoolean: false
