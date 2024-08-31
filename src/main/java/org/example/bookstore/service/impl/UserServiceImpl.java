@@ -1,8 +1,8 @@
 package org.example.bookstore.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.example.bookstore.dto.UserRegistrationRequestDto;
-import org.example.bookstore.dto.UserResponseDto;
+import org.example.bookstore.dto.user.UserRegistrationRequestDto;
+import org.example.bookstore.dto.user.UserResponseDto;
 import org.example.bookstore.exception.RegistrationException;
 import org.example.bookstore.mapper.UserMapper;
 import org.example.bookstore.model.User;

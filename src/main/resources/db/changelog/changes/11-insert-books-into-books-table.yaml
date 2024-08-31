@@ -1,0 +1,70 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-books-into-books-table
+      author: trayvor
+      changes:
+        - insert:
+            tableName: books
+            columns:
+              - column:
+                  name: title
+                  value: "The Great Gatsby"
+              - column:
+                  name: author
+                  value: "F. Scott Fitzgerald"
+              - column:
+                  name: isbn
+                  value: "9780743273565"
+              - column:
+                  name: price
+                  valueNumeric: 10.99
+              - column:
+                  name: description
+                  value: "A classic novel set in the Jazz Age."
+              - column:
+                  name: cover_image
+                  value: "great_gatsby.jpg"
+
+        - insert:
+            tableName: books
+            columns:
+              - column:
+                  name: title
+                  value: "1984"
+              - column:
+                  name: author
+                  value: "George Orwell"
+              - column:
+                  name: isbn
+                  value: "9780451524935"
+              - column:
+                  name: price
+                  valueNumeric: 8.99
+              - column:
+                  name: description
+                  value: "A dystopian novel about totalitarianism."
+              - column:
+                  name: cover_image
+                  value: "1984.jpg"
+
+        - insert:
+            tableName: books
+            columns:
+              - column:
+                  name: title
+                  value: "To Kill a Mockingbird"
+              - column:
+                  name: author
+                  value: "Harper Lee"
+              - column:
+                  name: isbn
+                  value: "9780061120084"
+              - column:
+                  name: price
+                  valueNumeric: 7.99
+              - column:
+                  name: description
+                  value: "A novel about racial injustice in the Deep South."
+              - column:
+                  name: cover_image
+                  value: "to_kill_a_mockingbird.jpg"

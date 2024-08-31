@@ -1,0 +1,34 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-categories-into-categories-table
+      author: trayvor
+      changes:
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: "Fiction"
+              - column:
+                  name: description
+                  value: "Novels and stories"
+
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: "Non-Fiction"
+              - column:
+                  name: description
+                  value: "Informative and educational books"
+
+        - insert:
+            tableName: categories
+            columns:
+              - column:
+                  name: name
+                  value: "Science Fiction"
+              - column:
+                  name: description
+                  value: "Books with futuristic and scientific themes"
