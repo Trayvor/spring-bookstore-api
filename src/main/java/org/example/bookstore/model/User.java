@@ -41,7 +41,7 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String lastName;
     private String shippingAddress;
-    @Column(nullable = false, name = "is_deleted", columnDefinition = "tinyint")
+    @Column(nullable = false, columnDefinition = "tinyint")
     private boolean isDeleted = false;
     @ManyToMany
     @JoinTable(

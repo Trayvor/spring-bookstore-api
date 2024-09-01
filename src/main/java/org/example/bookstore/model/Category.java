@@ -23,8 +23,7 @@ public class Category {
     private Long id;
     @Column(nullable = false)
     private String name;
-    @Column
     private String description;
-    @Column(nullable = false, name = "is_deleted", columnDefinition = "tinyint")
+    @Column(nullable = false, columnDefinition = "tinyint")
     private boolean isDeleted = false;
 }

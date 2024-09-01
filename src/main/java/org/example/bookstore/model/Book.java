@@ -22,7 +22,7 @@ import org.hibernate.annotations.SQLRestriction;
 @Getter
 @Setter
 @Entity
-@SQLDelete(sql = "UPDATE categories SET is_deleted = true WHERE id=?")
+@SQLDelete(sql = "UPDATE books SET is_deleted = true WHERE id=?")
 @SQLRestriction(value = "is_deleted=false")
 @Table(name = "books")
 public class Book {
@@ -40,7 +40,7 @@ public class Book {
     @Column(nullable = false)
     private String description;
     private String coverImage;
-    @Column(nullable = false, name = "is_deleted", columnDefinition = "tinyint")
+    @Column(nullable = false, columnDefinition = "tinyint")
     private boolean isDeleted = false;
     @ManyToMany
     @JoinTable(

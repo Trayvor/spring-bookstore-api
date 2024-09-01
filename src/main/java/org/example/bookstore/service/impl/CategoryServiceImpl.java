@@ -44,8 +44,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto update(Long id, UpdateCategoryDto updateCategoryDto) {
-        Category category = categoryMapper.toModel(updateCategoryDto);
-        category.setId(id);
+        Category category = categoryRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException("Can`t find category with id " + id));
+        categoryMapper.updateCategoryFromRequestDto(updateCategoryDto, category);
         categoryRepository.save(category);
         return categoryMapper.toDto(category);
     }
