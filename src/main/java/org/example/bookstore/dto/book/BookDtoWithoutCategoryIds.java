@@ -1,10 +1,10 @@
-package org.example.bookstore.dto;
+package org.example.bookstore.dto.book;
 
 import java.math.BigDecimal;
 import lombok.Data;
 
 @Data
-public class BookDto {
+public class BookDtoWithoutCategoryIds {
     private Long id;
     private String title;
     private String author;

@@ -13,3 +13,13 @@ databaseChangeLog:
       file: db/changelog/changes/06-insert-users-into-users-table.yaml
   - include:
       file: db/changelog/changes/07-insert-dependencies-into-users-roles-table.yaml
+  - include:
+      file: db/changelog/changes/08-create-categories-table.yaml
+  - include:
+      file: db/changelog/changes/09-create-books-categories-table.yaml
+  - include:
+      file: db/changelog/changes/10-insert-categories-into-categories-table.yaml
+  - include:
+      file: db/changelog/changes/11-insert-books-into-books-table.yaml
+  - include:
+      file: db/changelog/changes/12-insert-dependencies-into-books-categories-table.yaml
