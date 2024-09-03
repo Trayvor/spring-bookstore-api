@@ -40,6 +40,7 @@ public interface BookMapper {
 
     @AfterMapping
     default void setCategory(@MappingTarget Book book, UpdateBookRequestDto requestDto) {
+        book.getCategories().clear();
         for (Long id : requestDto.getCategoriesIds()) {
             Category category = new Category();
             category.setId(id);
