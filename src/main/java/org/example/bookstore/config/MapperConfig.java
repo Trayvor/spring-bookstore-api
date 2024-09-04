@@ -1,5 +1,6 @@
 package org.example.bookstore.config;
 
+import org.example.bookstore.mapper.CartItemMapper;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.NullValueCheckStrategy;
 
@@ -9,5 +10,5 @@ import org.mapstruct.NullValueCheckStrategy;
         nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS,
         implementationPackage = "<PACKAGE_NAME>.impl"
 )
-public class MapperConfig {
+public interface MapperConfig {
 }

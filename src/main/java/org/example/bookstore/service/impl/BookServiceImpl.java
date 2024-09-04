@@ -11,6 +11,7 @@ import org.example.bookstore.mapper.BookMapper;
 import org.example.bookstore.model.Book;
 import org.example.bookstore.repository.book.BookRepository;
 import org.example.bookstore.repository.book.BookSpecificationBuilder;
+import org.example.bookstore.repository.cart.item.CartItemRepository;
 import org.example.bookstore.service.BookService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,6 +23,7 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
     private final BookSpecificationBuilder specificationBuilder;
+    private final CartItemRepository cartItemRepository;
 
     @Override
     public BookDto save(CreateBookRequestDto requestDto) {
@@ -56,6 +58,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public void deleteById(Long id) {
         bookRepository.deleteById(id);
+        cartItemRepository.deleteCartItemsByBook_Id(id);
     }
 
     @Override

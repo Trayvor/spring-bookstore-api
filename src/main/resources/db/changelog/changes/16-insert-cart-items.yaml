@@ -18,9 +18,6 @@ databaseChangeLog:
               - column:
                   name: quantity
                   value: 2
-              - column:
-                  name: is_deleted
-                  valueBoolean: false
 
         - insert:
             tableName: cart_items
@@ -37,9 +34,6 @@ databaseChangeLog:
               - column:
                   name: quantity
                   value: 1
-              - column:
-                  name: is_deleted
-                  valueBoolean: false
 
         - insert:
             tableName: cart_items
@@ -56,6 +50,3 @@ databaseChangeLog:
               - column:
                   name: quantity
                   value: 3
-              - column:
-                  name: is_deleted
-                  valueBoolean: false

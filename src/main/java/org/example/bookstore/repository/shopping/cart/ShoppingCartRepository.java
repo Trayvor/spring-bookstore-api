@@ -8,6 +8,6 @@ import org.springframework.data.repository.query.Param;
 
 public interface ShoppingCartRepository extends JpaRepository<ShoppingCart, Long> {
     @Query("SELECT sc FROM ShoppingCart sc LEFT JOIN FETCH"
-            + " sc.cartItems WHERE sc.user.email = :email")
+            + " sc.cartItems ci LEFT JOIN FETCH ci.book WHERE sc.user.email = :email")
     Optional<ShoppingCart> findByUserEmail(@Param("email") String email);
 }
