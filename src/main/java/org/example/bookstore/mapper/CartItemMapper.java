@@ -9,11 +9,9 @@ import org.example.bookstore.model.CartItem;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(config = MapperConfig.class)
 public interface CartItemMapper {
-
     CartItem toModel(CreateCartItemRequestDto createCartItemRequestDto);
 
     CartItem toModel(CartItemDto cartItemDto);

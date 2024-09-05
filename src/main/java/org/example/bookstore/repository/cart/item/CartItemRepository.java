@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     void deleteCartItemsByBook_Id(Long bookId);
 
-    Optional<CartItem> findByIdAndShoppingCartUserEmail(Long id, String userEmail);
+    Optional<CartItem> findByIdAndShoppingCartUserId(Long itemId, Long userId);
 
-    boolean existsByIdAndShoppingCartUserEmail(Long id, String userEmail);
+    boolean existsByIdAndShoppingCartUserId(Long itemId, Long userId);
 }

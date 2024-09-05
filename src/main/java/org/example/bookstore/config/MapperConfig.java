@@ -1,6 +1,5 @@
 package org.example.bookstore.config;
 
-import org.example.bookstore.mapper.CartItemMapper;
 import org.mapstruct.InjectionStrategy;
 import org.mapstruct.NullValueCheckStrategy;
 

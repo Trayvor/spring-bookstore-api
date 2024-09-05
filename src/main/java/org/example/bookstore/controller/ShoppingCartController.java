@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.bookstore.dto.cart.item.CreateCartItemRequestDto;
 import org.example.bookstore.dto.cart.item.UpdateCartItemRequestDto;
 import org.example.bookstore.dto.shopping.cart.ShoppingCartDto;
+import org.example.bookstore.model.User;
 import org.example.bookstore.service.ShoppingCartService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -26,7 +27,8 @@ public class ShoppingCartController {
     @GetMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     public ShoppingCartDto getUsersShoppingCart(Authentication authentication) {
-        return shoppingCartService.getShoppingCart(authentication);
+        User user = (User) authentication.getPrincipal();
+        return shoppingCartService.getShoppingCart(user.getId());
     }
 
     @PostMapping
@@ -34,7 +36,8 @@ public class ShoppingCartController {
     public ShoppingCartDto addCartItemToShoppingCart(
             @RequestBody @Valid CreateCartItemRequestDto createCartItemRequestDto,
             Authentication authentication) {
-        return shoppingCartService.addItemToShoppingCart(createCartItemRequestDto, authentication);
+        User user = (User) authentication.getPrincipal();
+        return shoppingCartService.addItemToShoppingCart(createCartItemRequestDto, user.getId());
     }
 
     @PutMapping("/items/{cartItemId}")
@@ -43,14 +46,16 @@ public class ShoppingCartController {
                                                   @RequestBody @Valid UpdateCartItemRequestDto
                                                           updateCartItemRequestDto,
                                                   Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
         return shoppingCartService.updateCartItem(cartItemId,
                 updateCartItemRequestDto,
-                authentication);
+                user.getId());
     }
 
     @DeleteMapping("/items/{cartItemId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public void deleteCartItem(@PathVariable Long cartItemId, Authentication authentication) {
-        shoppingCartService.deleteCartItem(cartItemId, authentication);
+        User user = (User) authentication.getPrincipal();
+        shoppingCartService.deleteCartItem(cartItemId, user.getId());
     }
 }

@@ -13,7 +13,6 @@ import org.example.bookstore.model.User;
 import org.example.bookstore.repository.cart.item.CartItemRepository;
 import org.example.bookstore.repository.shopping.cart.ShoppingCartRepository;
 import org.example.bookstore.service.ShoppingCartService;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,53 +25,53 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     public ShoppingCartDto addItemToShoppingCart(CreateCartItemRequestDto cartItemRequestDto,
-                                                 Authentication authentication) {
+                                                 Long userId) {
         ShoppingCart shoppingCart =
-                shoppingCartRepository.findByUserEmail(authentication.getName()).orElseThrow(
+                shoppingCartRepository.findByUserId(userId).orElseThrow(
                         () -> new EntityNotFoundException(
                                 "Can`t find shopping cart for current user with"
-                                        + " email " + authentication.getName())
+                                        + " id " + userId)
                 );
         CartItem cartItem = cartItemMapper.toModel(cartItemRequestDto);
         cartItem.setShoppingCart(shoppingCart);
         cartItemRepository.save(cartItem);
-        return getShoppingCart(authentication);
+        return getShoppingCart(userId);
     }
 
     @Override
-    public ShoppingCartDto getShoppingCart(Authentication authentication) {
+    public ShoppingCartDto getShoppingCart(Long userId) {
         return shoppingCartMapper.toDto(shoppingCartRepository
-                .findByUserEmail(authentication.getName()).orElseThrow(
+                .findByUserId(userId).orElseThrow(
                         () -> new EntityNotFoundException(
                                 "Can`t find shopping cart for current user with"
-                                        + " email " + authentication.getName())
+                                        + "id " + userId)
                 )
         );
     }
 
     @Override
-    public ShoppingCartDto updateCartItem(Long id,
+    public ShoppingCartDto updateCartItem(Long itemId,
                                           UpdateCartItemRequestDto cartItemRequestDto,
-                                          Authentication authentication) {
+                                          Long userId) {
         CartItem cartItem = cartItemRepository
-                .findByIdAndShoppingCartUserEmail(id, authentication.getName()).orElseThrow(
-                        () -> new EntityNotFoundException("Can`t find cart item with id " + id
-                                + ", because it does not exists or not belongs to user wit email "
-                                + authentication.getName())
+                .findByIdAndShoppingCartUserId(itemId, userId).orElseThrow(
+                        () -> new EntityNotFoundException("Can`t find cart item with id " + itemId
+                                + ", because it does not exists or not belongs to user with id "
+                                + userId)
                 );
         cartItemMapper.updateCartItemFromRequestDto(cartItemRequestDto, cartItem);
         cartItemRepository.save(cartItem);
-        return getShoppingCart(authentication);
+        return getShoppingCart(userId);
     }
 
     @Override
-    public void deleteCartItem(Long id, Authentication authentication) {
-        if (!cartItemRepository.existsByIdAndShoppingCartUserEmail(id, authentication.getName())) {
-            throw new EntityNotFoundException("Can`t find cart item with id " + id
-                    + ", because it does not exists or not belongs to user wit email "
-                    + authentication.getName());
+    public void deleteCartItem(Long itemId, Long userId) {
+        if (!cartItemRepository.existsByIdAndShoppingCartUserId(itemId, userId)) {
+            throw new EntityNotFoundException("Can`t find cart item with id " + itemId
+                    + ", because it does not exists or not belongs to user with id "
+                    + userId);
         }
-        cartItemRepository.deleteById(id);
+        cartItemRepository.deleteById(itemId);
     }
 
     public void createShoppingCartForUser(User user) {
