@@ -1,7 +1,6 @@
 package org.example.bookstore.service.impl;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.example.bookstore.dto.order.ChangeOrderStatusRequestDto;
@@ -18,7 +17,6 @@ import org.example.bookstore.model.Order;
 import org.example.bookstore.model.OrderItem;
 import org.example.bookstore.model.ShoppingCart;
 import org.example.bookstore.model.User;
-import org.example.bookstore.model.constant.Status;
 import org.example.bookstore.repository.order.OrderRepository;
 import org.example.bookstore.repository.order.item.OrderItemRepository;
 import org.example.bookstore.repository.shopping.cart.ShoppingCartRepository;
@@ -60,7 +58,8 @@ public class OrderServiceImpl implements OrderService {
             order.setTotal(order.getTotal()
                     .add(orderItem.getPrice().multiply(new BigDecimal(orderItem.getQuantity()))));
         }
-        shoppingCartService.deleteAllFromShoppingCart(userId);
+        shoppingCart.clearCart();
+        shoppingCartRepository.save(shoppingCart);
         return orderMapper.toDto(orderRepository.save(order));
     }
 
@@ -85,10 +84,8 @@ public class OrderServiceImpl implements OrderService {
         OrderItem orderItem = orderItemRepository
                 .findByIdAndOrderIdAndOrderUserId(itemId, orderId, userId).orElseThrow(
                         () -> new EntityNotFoundException("Can`t find order item with id "
-                                + itemId
-                                + "that depends to order  with id " + orderId
-                                + " that depends to user with"
-                                + " id " + userId)
+                                + itemId + " that depends to order  with id " + orderId
+                                + " that depends to user with id " + userId)
                 );
         return orderItemMapper.toDto(orderItem);
     }
@@ -96,10 +93,7 @@ public class OrderServiceImpl implements OrderService {
     private Order createBlankOrder(CreateOrderRequestDto createOrderRequestDto, Long userId) {
         Order order = new Order();
         order.setUser(new User(userId));
-        order.setOrderDate(LocalDateTime.now());
-        order.setStatus(Status.PENDING);
         order.setShippingAddress(createOrderRequestDto.shippingAddress());
-
         order.setTotal(new BigDecimal(0));
         return orderRepository.save(order);
     }

@@ -33,19 +33,19 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status = Status.PENDING;
     @Column(nullable = false)
     private BigDecimal total;
     @Column(name = "order_date", nullable = false)
-    private LocalDateTime orderDate;
+    private LocalDateTime orderDate = LocalDateTime.now();
     @Column(name = "shipping_address", nullable = false)
     private String shippingAddress;
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.ALL,
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL,
             orphanRemoval =
             true)
     private Set<OrderItem> orderItems = new HashSet<>();
