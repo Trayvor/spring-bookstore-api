@@ -1,5 +1,6 @@
 package org.example.bookstore.service.impl;
 
+import java.util.HashSet;
 import lombok.RequiredArgsConstructor;
 import org.example.bookstore.dto.cart.item.CreateCartItemRequestDto;
 import org.example.bookstore.dto.cart.item.UpdateCartItemRequestDto;
@@ -77,6 +78,16 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void createShoppingCartForUser(User user) {
         ShoppingCart shoppingCart = new ShoppingCart();
         shoppingCart.setUser(user);
+        shoppingCartRepository.save(shoppingCart);
+    }
+
+    @Override
+    public void deleteAllFromShoppingCart(Long userId) {
+        ShoppingCart shoppingCart = shoppingCartRepository.findByUserId(userId).orElseThrow(
+                () -> new EntityNotFoundException("Can`t find shopping cart for current user with"
+                        + "id " + userId)
+        );
+        shoppingCart.setCartItems(new HashSet<>());
         shoppingCartRepository.save(shoppingCart);
     }
 }

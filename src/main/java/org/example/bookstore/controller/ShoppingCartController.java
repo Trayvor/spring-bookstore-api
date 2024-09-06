@@ -28,19 +28,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
 
-    @Operation(summary = "Find shopping cart for logged in user",
-            description = "Returns list of cart items in user`s shopping cart")
     @GetMapping
     @PreAuthorize("hasRole('ROLE_USER')")
+    @Operation(summary = "Find shopping cart for logged in user",
+            description = "Returns list of cart items in user`s shopping cart")
     public ShoppingCartDto getUsersShoppingCart(Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         return shoppingCartService.getShoppingCart(user.getId());
     }
 
-    @Operation(summary = "Adding cart item",
-            description = "Adding cart item in user`s shopping cart")
     @PostMapping
     @PreAuthorize("hasRole('ROLE_USER')")
+    @Operation(summary = "Adding cart item",
+            description = "Adding cart item in user`s shopping cart")
     public ShoppingCartDto addCartItemToShoppingCart(
             @RequestBody @Valid CreateCartItemRequestDto createCartItemRequestDto,
             Authentication authentication) {
@@ -48,9 +48,9 @@ public class ShoppingCartController {
         return shoppingCartService.addItemToShoppingCart(createCartItemRequestDto, user.getId());
     }
 
-    @Operation(summary = "Updating cart item quantity", description = "Updating cart item quantity")
     @PutMapping("/items/{cartItemId}")
     @PreAuthorize("hasRole('ROLE_USER')")
+    @Operation(summary = "Updating cart item quantity", description = "Updating cart item quantity")
     public ShoppingCartDto updateCartItemQuantity(@PathVariable Long cartItemId,
                                                   @RequestBody @Valid UpdateCartItemRequestDto
                                                           updateCartItemRequestDto,
@@ -61,10 +61,10 @@ public class ShoppingCartController {
                 user.getId());
     }
 
-    @Operation(summary = "Deleting cart item",
-            description = "Deleting cart item from user`s shopping cart")
     @DeleteMapping("/items/{cartItemId}")
     @PreAuthorize("hasRole('ROLE_USER')")
+    @Operation(summary = "Deleting cart item",
+            description = "Deleting cart item from user`s shopping cart")
     public void deleteCartItem(@PathVariable Long cartItemId, Authentication authentication) {
         User user = (User) authentication.getPrincipal();
         shoppingCartService.deleteCartItem(cartItemId, user.getId());
