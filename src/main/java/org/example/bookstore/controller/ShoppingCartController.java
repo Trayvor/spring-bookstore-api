@@ -33,7 +33,7 @@ public class ShoppingCartController {
     @Operation(summary = "Find shopping cart for logged in user",
             description = "Returns list of cart items in user`s shopping cart")
     public ShoppingCartDto getUsersShoppingCart(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        User user = getAuthenticatedUser(authentication);
         return shoppingCartService.getShoppingCart(user.getId());
     }
 
@@ -44,7 +44,7 @@ public class ShoppingCartController {
     public ShoppingCartDto addCartItemToShoppingCart(
             @RequestBody @Valid CreateCartItemRequestDto createCartItemRequestDto,
             Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        User user = getAuthenticatedUser(authentication);
         return shoppingCartService.addItemToShoppingCart(createCartItemRequestDto, user.getId());
     }
 
@@ -55,7 +55,7 @@ public class ShoppingCartController {
                                                   @RequestBody @Valid UpdateCartItemRequestDto
                                                           updateCartItemRequestDto,
                                                   Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        User user = getAuthenticatedUser(authentication);
         return shoppingCartService.updateCartItem(cartItemId,
                 updateCartItemRequestDto,
                 user.getId());
@@ -66,7 +66,11 @@ public class ShoppingCartController {
     @Operation(summary = "Deleting cart item",
             description = "Deleting cart item from user`s shopping cart")
     public void deleteCartItem(@PathVariable Long cartItemId, Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        User user = getAuthenticatedUser(authentication);
         shoppingCartService.deleteCartItem(cartItemId, user.getId());
+    }
+
+    private User getAuthenticatedUser(Authentication authentication) {
+        return (User) authentication.getPrincipal();
     }
 }
