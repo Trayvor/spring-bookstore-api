@@ -61,7 +61,7 @@ public class OrderController {
             + "with id")
     public List<OrderItemDto> getOrderItemsById(@PathVariable Long orderId,
                                              Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        User user = getAuthenticatedUser(authentication);
         return orderService.getItemsById(orderId, user.getId());
     }
 
@@ -71,7 +71,11 @@ public class OrderController {
             + "specific user`s item in order by ids")
     public OrderItemDto getOrderItemById(@PathVariable Long orderId, @PathVariable Long itemId,
                                          Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        User user = getAuthenticatedUser(authentication);
         return orderService.getItemById(orderId, itemId, user.getId());
+    }
+
+    private User getAuthenticatedUser(Authentication authentication) {
+        return (User) authentication.getPrincipal();
     }
 }
