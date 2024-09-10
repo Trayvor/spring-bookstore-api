@@ -49,6 +49,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toModel(requestDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Set.of(userRole));
+        userRepository.save(user);
         shoppingCartService.createShoppingCart(user);
         return userMapper.toDto(user);
     }
