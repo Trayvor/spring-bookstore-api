@@ -9,16 +9,10 @@ databaseChangeLog:
               - column:
                   name: id
                   value: 1
-              - column:
-                  name: user_id
-                  value: 1
 
         - insert:
             tableName: shopping_carts
             columns:
               - column:
                   name: id
-                  value: 2
-              - column:
-                  name: user_id
                   value: 2

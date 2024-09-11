@@ -12,6 +12,7 @@ import org.example.bookstore.model.ShoppingCart;
 import org.example.bookstore.model.User;
 import org.example.bookstore.repository.cart.item.CartItemRepository;
 import org.example.bookstore.repository.shopping.cart.ShoppingCartRepository;
+import org.example.bookstore.repository.user.UserRepository;
 import org.example.bookstore.service.ShoppingCartService;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     private final CartItemRepository cartItemRepository;
     private final ShoppingCartMapper shoppingCartMapper;
     private final CartItemMapper cartItemMapper;
+    private final UserRepository userRepository;
 
     @Override
     public ShoppingCartDto addItemToShoppingCart(CreateCartItemRequestDto cartItemRequestDto,
