@@ -1,10 +1,12 @@
-package service;
+package org.example.bookstore.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -19,6 +21,7 @@ import org.example.bookstore.mapper.CategoryMapper;
 import org.example.bookstore.model.Category;
 import org.example.bookstore.repository.category.CategoryRepository;
 import org.example.bookstore.service.impl.CategoryServiceImpl;
+import org.example.bookstore.util.CategoryUtil;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,24 +44,14 @@ public class CategoryServiceTest {
     private CategoryServiceImpl categoryService;
 
     @DisplayName("""
-            Verify save() method works correctly and returns correct CategoryDto with valid input data
+            Verify save() method works correctly and returns correct CategoryDto
+            with valid input data
             """)
     @Test
     public void save_WithValidCreateCategoryDto_ShouldReturnCorrectCategoryDto() {
-        CreateCategoryDto createCategoryDto = new CreateCategoryDto();
-        createCategoryDto.setName("Test name");
-        createCategoryDto.setDescription("test description");
-
-        Category category = new Category();
-        category.setName(createCategoryDto.getName());
-        category.setDescription(createCategoryDto.getDescription());
-
-        Long categoryId = 1L;
-
-        CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setId(categoryId);
-        categoryDto.setName(createCategoryDto.getName());
-        categoryDto.setDescription(createCategoryDto.getDescription());
+        CreateCategoryDto createCategoryDto = CategoryUtil.createCreateFirstCategoryDto();
+        Category category = CategoryUtil.createFirstCategory();
+        CategoryDto categoryDto = CategoryUtil.createFirstCategoryDto();
 
         when(categoryMapper.toModel(createCategoryDto)).thenReturn(category);
         when(categoryRepository.save(category)).thenReturn(category);
@@ -67,9 +60,10 @@ public class CategoryServiceTest {
         CategoryDto result = categoryService.save(createCategoryDto);
 
         assertEquals(categoryDto, result);
-        verify(categoryRepository, times(1)).save(category);
-        verify(categoryMapper, times(1)).toDto(category);
-        verify(categoryMapper, times(1)).toModel(createCategoryDto);
+        verify(categoryRepository, times(1)).save(any());
+        verify(categoryMapper, times(1)).toDto(any());
+        verify(categoryMapper, times(1))
+                .toModel(any(CreateCategoryDto.class));
     }
 
     @DisplayName("""
@@ -78,23 +72,15 @@ public class CategoryServiceTest {
             """)
     @Test
     public void update_WithValidIdAndUpdateCategoryDto_ShouldReturnCorrectCategoryDto() {
-        Long categoryId = 1L;
-
-        UpdateCategoryDto updateCategoryDto = new UpdateCategoryDto();
-        updateCategoryDto.setName("Updated Name");
-        updateCategoryDto.setDescription("Updated Description");
-
-        Category category = new Category();
-        category.setId(categoryId);
-        category.setName("Initial Name");
-        category.setDescription("Initial Description");
+        Category category = CategoryUtil.createFirstCategory();
+        UpdateCategoryDto updateCategoryDto = CategoryUtil.createUpdateCategoryDto();
 
         CategoryDto updatedCategoryDto = new CategoryDto();
-        updatedCategoryDto.setId(categoryId);
+        updatedCategoryDto.setId(category.getId());
         updatedCategoryDto.setName(updateCategoryDto.getName());
         updatedCategoryDto.setDescription(updateCategoryDto.getDescription());
 
-        doReturn(Optional.of(category)).when(categoryRepository).findById(categoryId);
+        doReturn(Optional.of(category)).when(categoryRepository).findById(category.getId());
         doAnswer(invocationOnMock -> {
             UpdateCategoryDto invocationUpdateCategoryDto =
                     (UpdateCategoryDto) invocationOnMock.getArgument(0);
@@ -108,14 +94,14 @@ public class CategoryServiceTest {
         doReturn(category).when(categoryRepository).save(category);
         doReturn(updatedCategoryDto).when(categoryMapper).toDto(category);
 
-        CategoryDto result = categoryService.update(categoryId, updateCategoryDto);
+        CategoryDto result = categoryService.update(category.getId(), updateCategoryDto);
 
         assertEquals(updatedCategoryDto, result);
-        verify(categoryRepository, times(1)).findById(categoryId);
+        verify(categoryRepository, times(1)).findById(any());
         verify(categoryMapper, times(1))
-                .updateCategoryFromRequestDto(updateCategoryDto, category);
-        verify(categoryRepository, times(1)).save(category);
-        verify(categoryMapper, times(1)).toDto(category);
+                .updateCategoryFromRequestDto(any(), any());
+        verify(categoryRepository, times(1)).save(any());
+        verify(categoryMapper, times(1)).toDto(any());
     }
 
     @DisplayName("""
@@ -124,17 +110,17 @@ public class CategoryServiceTest {
             """)
     @Test
     public void update_WithNonExistingCategoryId_ShouldThrowException() {
-        Long categoryId = 1L;
+        Category category = CategoryUtil.createFirstCategory();
+        UpdateCategoryDto updateCategoryDto = CategoryUtil.createUpdateCategoryDto();
 
-        UpdateCategoryDto updateCategoryDto = new UpdateCategoryDto();
-        updateCategoryDto.setName("Updated Name");
-        updateCategoryDto.setDescription("Updated Description");
-
-        doThrow(EntityNotFoundException.class).when(categoryRepository).findById(categoryId);
+        doThrow(EntityNotFoundException.class).when(categoryRepository).findById(category.getId());
 
         assertThrows(EntityNotFoundException.class,
-                () -> categoryService.update(categoryId, updateCategoryDto));
-        verify(categoryRepository, times(1)).findById(categoryId);
+                () -> categoryService.update(category.getId(), updateCategoryDto));
+        verify(categoryRepository, times(1)).findById(category.getId());
+        verify(categoryRepository, never()).save(any());
+        verify(categoryMapper, never()).toDto(any());
+        verify(categoryMapper, never()).updateCategoryFromRequestDto(any(), any());
     }
 
     @DisplayName("""
@@ -143,26 +129,17 @@ public class CategoryServiceTest {
             """)
     @Test
     public void getById_WithValidId_ShouldReturnCorrectCategoryDto() {
-        Long categoryId = 1L;
+        Category category = CategoryUtil.createFirstCategory();
+        CategoryDto categoryDto = CategoryUtil.createFirstCategoryDto();
 
-        Category category = new Category();
-        category.setId(categoryId);
-        category.setName("Test Name");
-        category.setDescription("Test Description");
-
-        CategoryDto categoryDto = new CategoryDto();
-        categoryDto.setId(categoryId);
-        categoryDto.setName(category.getName());
-        categoryDto.setDescription(category.getDescription());
-
-        doReturn(Optional.of(category)).when(categoryRepository).findById(categoryId);
+        doReturn(Optional.of(category)).when(categoryRepository).findById(category.getId());
         doReturn(categoryDto).when(categoryMapper).toDto(category);
 
-        CategoryDto result = categoryService.getById(categoryId);
+        CategoryDto result = categoryService.getById(category.getId());
 
         assertEquals(categoryDto, result);
-        verify(categoryRepository, times(1)).findById(categoryId);
-        verify(categoryMapper, times(1)).toDto(category);
+        verify(categoryRepository, times(1)).findById(any());
+        verify(categoryMapper, times(1)).toDto(any());
     }
 
     @DisplayName("""
@@ -171,12 +148,14 @@ public class CategoryServiceTest {
             """)
     @Test
     public void getById_WithNonExistingCategoryId_ShouldThrowException() {
-        Long categoryId = 1L;
+        Category category = CategoryUtil.createFirstCategory();
 
-        doThrow(EntityNotFoundException.class).when(categoryRepository).findById(categoryId);
+        when(categoryRepository.findById(category.getId())).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> categoryService.getById(categoryId));
-        verify(categoryRepository, times(1)).findById(categoryId);
+        assertThrows(EntityNotFoundException.class,
+                () -> categoryService.getById(category.getId()));
+        verify(categoryRepository, times(1)).findById(any());
+        verify(categoryMapper, never()).toDto(any());
     }
 
     @DisplayName("""
@@ -185,25 +164,10 @@ public class CategoryServiceTest {
             """)
     @Test
     public void findAll_WithTwoCategoriesInDatabase_ShouldReturnListWithTwoCategories() {
-        Category firstCategory = new Category();
-        firstCategory.setId(1L);
-        firstCategory.setName("First Category");
-        firstCategory.setDescription("First Category Description");
-
-        Category secondCategory = new Category();
-        secondCategory.setId(2L);
-        secondCategory.setName("Second Category");
-        secondCategory.setDescription("Second Category Description");
-
-        CategoryDto firstCategoryDto = new CategoryDto();
-        firstCategoryDto.setId(firstCategory.getId());
-        firstCategoryDto.setName(firstCategory.getName());
-        firstCategoryDto.setDescription(firstCategory.getDescription());
-
-        CategoryDto secondCategoryDto = new CategoryDto();
-        secondCategoryDto.setId(secondCategory.getId());
-        secondCategoryDto.setName(secondCategory.getName());
-        secondCategoryDto.setDescription(secondCategory.getDescription());
+        Category firstCategory = CategoryUtil.createFirstCategory();
+        Category secondCategory = CategoryUtil.createSecondCategory();
+        CategoryDto firstCategoryDto = CategoryUtil.createFirstCategoryDto();
+        CategoryDto secondCategoryDto = CategoryUtil.createSecondCategoryDto();
 
         Page<Category> categoryPage = new PageImpl<>(List.of(firstCategory, secondCategory));
         Pageable pageable = PageRequest.of(0, 10);
@@ -212,13 +176,13 @@ public class CategoryServiceTest {
         when(categoryMapper.toDto(firstCategory)).thenReturn(firstCategoryDto);
         when(categoryMapper.toDto(secondCategory)).thenReturn(secondCategoryDto);
 
+        List<CategoryDto> expected = List.of(firstCategoryDto, secondCategoryDto);
+
         List<CategoryDto> result = categoryService.findAll(pageable);
 
-        List<CategoryDto> expected = List.of(firstCategoryDto, secondCategoryDto);
         assertEquals(expected, result);
-        verify(categoryRepository, times(1)).findAll(pageable);
-        verify(categoryMapper, times(1)).toDto(firstCategory);
-        verify(categoryMapper, times(1)).toDto(secondCategory);
+        verify(categoryRepository, times(1)).findAll(any(Pageable.class));
+        verify(categoryMapper, times(expected.size())).toDto(any());
     }
 
     @DisplayName("""
@@ -231,11 +195,12 @@ public class CategoryServiceTest {
 
         when(categoryRepository.findAll(pageable)).thenReturn(categoryPage);
 
+        List<CategoryDto> expected = List.of();
+
         List<CategoryDto> result = categoryService.findAll(pageable);
 
-        List<CategoryDto> expected = List.of();
         assertEquals(expected, result);
-        verify(categoryRepository, times(1)).findAll(pageable);
+        verify(categoryRepository, times(1)).findAll(any(Pageable.class));
+        verify(categoryMapper, never()).toDto(any());
     }
-
 }
