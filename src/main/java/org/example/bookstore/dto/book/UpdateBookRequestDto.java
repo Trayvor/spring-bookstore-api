@@ -7,8 +7,10 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.ISBN;
 
+@Accessors(chain = true)
 @Data
 public class UpdateBookRequestDto {
     @NotBlank
